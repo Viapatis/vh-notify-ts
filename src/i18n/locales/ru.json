@@ -1,0 +1,61 @@
+{
+  "events": {
+    "army_eikthyr": "Эйктюр объединяет существ леса.",
+    "army_theelder": "Лес движется...",
+    "army_bonemass": "Вонь с болот",
+    "army_moder": "Холодный ветер дует с гор",
+    "army_goblin": "Орда атакует",
+    "foresttrolls": "Земля трясется",
+    "ghosts": "Мороз по коже пробежал...",
+    "blobs": "Вонь с болот",
+    "skeletons": "Незваные кости",
+    "surtlings": "В воздухе висит запах серы…",
+    "wolves": "На вас охотятся…",
+    "bats": "Вы размешали котел",
+    "army_gjall": "Дарова, Гьялль!?",
+    "army_seekers": "Они ищут вас",
+    "army_charred": "Марш армии мертвых",
+    "army_charredspawners": "Восстание мертвецов",
+    "hildirboss1": "Она вот-вот задаст Вам жару",
+    "hildirboss2": "По Вам пробежал холодок",
+    "hildirboss3": "Они были братанами, парень",
+    "unknown": "Опа, неизвестное событие!"
+  },
+  "player": {
+    "connecting": "{{userName}} подключается",
+    "connected": "{{userName}} подключился как {{charName}}",
+    "disconnected": "{{charName}}({{userName}}) отключился",
+    "disconnectedUnknown": "Игрок отключился",
+    "died": "{{charName}} помер-умер",
+    "respawned": "{{charName}} воскрес",
+    "unknownUser": "Хто-то ({{steamId}})",
+    "unknownSteamId": "Хто я?"
+  },
+  "server": {
+    "started": "Сервер поднялся (версия {{version}}) и прогрузил мир {{worldName}}",
+    "day": "Все уснули. День {{day}}",
+    "crashed": "Сервер упал",
+    "raidStarted": "НАБЕГ ПОШЕЛ!\n{{eventMessage}}"
+  },
+  "log": {
+    "steamIdDetected": "Обнаружен Steam ID: {{steamId}}",
+    "messageSent": "Отправлено: {{message}}",
+    "sendError": "Ошибка отправки: {{error}}",
+    "usernameError": "Ошибка при получении имени пользователя: {{error}}",
+    "userFileWarning": "Предупреждение: не удалось найти файл {{filename}}",
+    "userLoadError": "Ошибка при загрузке имен пользователей: {{error}}",
+    "userParseError": "Ошибка при разборе файла пользователей: {{error}}",
+    "startingApp": "Запуск Valheim Notify",
+    "logFileError": "Ошибка: файл логов {{filename}} не найден!",
+    "tailError": "Ошибка tail: {{data}}",
+    "tailClosed": "Процесс tail завершился с кодом {{code}}",
+    "shuttingDown": "Завершение работы...",
+    "criticalError": "Критическая ошибка: {{error}}",
+    "unexpectedError": "Непредвиденная ошибка: {{error}}",
+    "userWriteError": "Ошибка при записи имени пользователя: {{error}}",
+    "disconnectEventStarted": "Событие отключения началось",
+    "disconnectEventEnded": "Событие отключения закончилось",
+    "nameFound": "Найдено имя: {{name}}",
+    "nameNotFound": "Не удалось найти имя для Steam ID: {{steamId}}"
+  }
+} 

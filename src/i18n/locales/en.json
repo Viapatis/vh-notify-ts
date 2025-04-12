@@ -1,0 +1,61 @@
+{
+  "events": {
+    "army_eikthyr": "Eikthyr rallies the creatures of the forest.",
+    "army_theelder": "The forest is moving...",
+    "army_bonemass": "A foul smell from the swamp...",
+    "army_moder": "A cold wind blows from the mountains.",
+    "army_goblin": "The horde is attacking!",
+    "army_gjall": "What's up, Gjall?!",
+    "army_seekers": "They sought you out.",
+    "army_charred": "The undead army marches.",
+    "army_charredspawners": "The dead have been summoned.",
+    "foresttrolls": "The ground is shaking.",
+    "blobs": "A foul smell from the swamp...",
+    "ghosts": "You feel a chill down your spine...",
+    "skeletons": "A skeleton surprise!",
+    "surtlings": "There's a smell of sulfur in the air...",
+    "wolves": "You are being hunted...",
+    "bats": "You stirred the cauldron.",
+    "hildirboss1": "She's hot on your tail!",
+    "hildirboss2": "You get the chills...",
+    "hildirboss3": "They were bros, man.",
+    "unknown": "Oops, unknown event!"
+  },
+  "player": {
+    "connecting": "{{userName}} is connecting",
+    "connected": "{{userName}} connected as {{charName}}",
+    "disconnected": "{{charName}}({{userName}}) disconnected",
+    "disconnectedUnknown": "A player disconnected",
+    "died": "{{charName}} has died",
+    "respawned": "{{charName}} has respawned",
+    "unknownUser": "Unknown player ({{steamId}})",
+    "unknownSteamId": "Unknown Steam ID"
+  },
+  "server": {
+    "started": "Server started (version {{version}}) and loaded world {{worldName}}",
+    "day": "Everyone went to sleep. Day {{day}}",
+    "crashed": "Server crashed",
+    "raidStarted": "RAID STARTED!\n{{eventMessage}}"
+  },
+  "log": {
+    "steamIdDetected": "Steam ID detected: {{steamId}}",
+    "messageSent": "Message sent: {{message}}",
+    "sendError": "Send error: {{error}}",
+    "usernameError": "Error getting username: {{error}}",
+    "userFileWarning": "Warning: could not find file {{filename}}",
+    "userLoadError": "Error loading user names: {{error}}",
+    "userParseError": "Error parsing users file: {{error}}",
+    "startingApp": "Starting Valheim Notify",
+    "logFileError": "Error: log file {{filename}} not found!",
+    "tailError": "Tail error: {{data}}",
+    "tailClosed": "Tail process exited with code {{code}}",
+    "shuttingDown": "Shutting down...",
+    "criticalError": "Critical error: {{error}}",
+    "unexpectedError": "Unexpected error: {{error}}",
+    "userWriteError": "Error writing username: {{error}}",
+    "disconnectEventStarted": "Disconnection event started",
+    "disconnectEventEnded": "Disconnection event ended",
+    "nameFound": "Found name: {{name}}",
+    "nameNotFound": "Could not find a name for Steam ID: {{steamId}}"
+  }
+} 

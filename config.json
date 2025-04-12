@@ -1,0 +1,9 @@
+{
+  "logFile": "/path/to/your/valheim/logs.txt",
+  "language": "ru",
+  "telegramBotToken": "",
+  "telegramChatID": "",
+  "users": "/path/to/users.json",
+  "timeout": 10000,
+  "steamURL": ""
+} 

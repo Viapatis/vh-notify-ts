@@ -1,0 +1,27 @@
+{
+  "name": "vh-notify-ts",
+  "version": "1.0.0",
+  "description": "Notification system for Valheim server",
+  "main": "src/vh-notify.ts",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "start": "ts-node src/vh-notify.ts",
+    "build": "tsc",
+    "dev": "ts-node src/vh-notify.ts",
+    "setup": "npm install && npm run bundle",
+    "bundle": "ts-node scripts/build.ts"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "i18next": "^24.2.3",
+    "typescript": "^5.3.2"
+  },
+  "devDependencies": {
+    "@types/i18next": "^13.0.0",
+    "@types/node": "^20.9.0",
+    "esbuild": "^0.25.2",
+    "ts-node": "^10.9.2"
+  }
+}
