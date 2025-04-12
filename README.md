@@ -17,15 +17,15 @@ The application monitors the Valheim server log file and sends notifications for
 
 ### Basic Setup
 
-1. Download the latest release from the releases page
+1. Install node and Download the latest release from the releases page
 2. Create a configuration file named `config.json` in the same directory as the executable
 3. Configure the following parameters:
 
 ```json
 {
   "language": "ru",
-  "logFile": "/path/to/valheim/server/log",
-  "users": "/path/to/users.json",
+  "logFile": "/home/vhserver/log/console/vhserver-console.log",
+  "users": "/home/vhserver/vh-notify-ts/users.json",
   "steamURL": "https://steamcommunity.com/profiles/",
   "timeout": 5000,
   "telegramBotToken": "YOUR_TELEGRAM_BOT_TOKEN",
@@ -34,8 +34,17 @@ The application monitors the Valheim server log file and sends notifications for
 ```
 
 4. Run the executable
+```bash
+node /home/vhserver/vh-notify-ts/vh-notify.js &
 ```
-node path/to/vh-notify/vh-notify.js &
+5. To start automatically on boot, add to cron with
+```bash 
+   crontab -e
+```
+and then add a line (replace with actual location of the script and node) 
+
+```
+@reboot /home/vhserver/node /home/vhserver/vh-notify-ts/vh-notify.js &
 ```
 
 ### Localization

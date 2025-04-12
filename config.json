@@ -1,9 +1,9 @@
 {
-  "logFile": "/path/to/your/valheim/logs.txt",
+  "logFile": "/home/vhserver/log/console/vhserver-console.log",
   "language": "ru",
   "telegramBotToken": "",
   "telegramChatID": "",
-  "users": "/path/to/users.json",
+  "users": "/home/vhserver/vh-notify-ts/users.json",
   "timeout": 10000,
   "steamURL": ""
 } 
