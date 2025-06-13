@@ -17,6 +17,7 @@ const USER_CONNECTION_ID =
     /PlayFab socket with remote ID playfab\/([0-9a-zA-Z_]+) received local Platform ID Steam_([0-9]+)/;
 const USER_NETWORK_TROUBLE_DETECTED = /Resume TX on playfab\/([0-9a-zA-Z_]+)/;
 const UPDATE_PLAYFAB_TOKEN_REGEX = /Update PlayFab entity token/;
+const PLAYER_CONNECTION_LOST_SERVER_REGEX = /Player connection lost server|Update PlayFab entity token/;
 
 export const events: Event[] = [
     {
@@ -127,7 +128,7 @@ export const events: Event[] = [
                             ? context.charNamesByZDOID[zdoid]
                             : null;
 
-                        await send({
+                        console.log({
                             message: i18next.t('log.networkTroubleDetected', {
                                 userName,
                                 charName:
@@ -138,7 +139,7 @@ export const events: Event[] = [
                             config,
                         });
                     } else {
-                        await send({
+                        console.log({
                             message: i18next.t('log.networkTroubleDetectedUnknown', {
                                 connectionId: currentConnectionId,
                             }),
@@ -156,7 +157,7 @@ export const events: Event[] = [
     },
 
     {
-        pattern: /ZRpc timeout detected/,
+        pattern: /ZRpc timeout detected|RPC_Disconnect/,
         type: EventType.USER_DISCONNECT_START,
         process: async ({
             context,
@@ -196,7 +197,7 @@ export const events: Event[] = [
         },
     },
     {
-        pattern: UPDATE_PLAYFAB_TOKEN_REGEX,
+        pattern: PLAYER_CONNECTION_LOST_SERVER_REGEX,
         type: EventType.USER_DISCONNECT_END,
         process: async ({
             context,
@@ -407,7 +408,7 @@ export const events: Event[] = [
                             ? context.charNamesByZDOID[zdoid]
                             : null;
 
-                        await send({
+                        console.log({
                             message: i18next.t('log.networkTroubleResolved', {
                                 userName,
                                 charName:
