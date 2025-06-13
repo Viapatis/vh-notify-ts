@@ -5,5 +5,8 @@
   "telegramChatID": "",
   "users": "/home/vhserver/vh-notify-ts/users.json",
   "timeout": 10000,
-  "steamURL": ""
+  "steamURL": "",
+  "testMode": false,
+  "testVerbose": false,
+  "testSaveOutput": false
 } 

@@ -1,0 +1,12 @@
+{
+  "language": "ru",
+  "logFile": "/path/to/your/vhserver-console.log",
+  "users": "./users.json",
+  "timeout": 10000,
+  "steamURL": "https://steamcommunity.com/profiles/",
+  "telegramBotToken": "YOUR_BOT_TOKEN",
+  "telegramChatID": "YOUR_CHAT_ID",
+  "testMode": false,
+  "testVerbose": false,
+  "testSaveOutput": false
+} 

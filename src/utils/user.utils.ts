@@ -23,12 +23,12 @@ export function loadNames({
 
         const content = fs.readFileSync(config.users, 'utf8');
         try {
-            context.userNames = JSON.parse(content);
+            context.userNamesBySteamID = JSON.parse(content);
         } catch (parseError) {
             console.error(
                 i18next.t('log.userParseError', { error: parseError })
             );
-            context.userNames = {};
+            context.userNamesBySteamID = {};
         }
     } catch (error) {
         console.error(i18next.t('log.userLoadError', { error }));
@@ -56,10 +56,10 @@ export async function addUserName({
         if (matches && matches[1]) {
             console.log(i18next.t('log.nameFound', { name: matches[1] }));
             const name = matches[1];
-            context.userNames[steamId] = name;
+            context.userNamesBySteamID[steamId] = name;
             fs.writeFile(
                 config.users,
-                JSON.stringify(context.userNames, null, 2),
+                JSON.stringify(context.userNamesBySteamID, null, 2),
                 (err) => {
                     if (err) {
                         console.error(
@@ -86,8 +86,8 @@ export function getUserName({
     context: Context;
     steamId: string;
 }): string {
-    if (context.userNames[steamId]) {
-        return context.userNames[steamId];
+    if (context.userNamesBySteamID[steamId]) {
+        return context.userNamesBySteamID[steamId];
     }
     return i18next.t('player.unknownUser', { steamId });
 }

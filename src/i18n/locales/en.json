@@ -29,7 +29,8 @@
     "died": "{{charName}} has died",
     "respawned": "{{charName}} has respawned",
     "unknownUser": "Unknown player ({{steamId}})",
-    "unknownSteamId": "Unknown Steam ID"
+    "unknownSteamId": "Unknown Steam ID",
+    "unknownCharacter": "Unknown character"
   },
   "server": {
     "started": "Server started (version {{version}}) and loaded world {{worldName}}",
@@ -46,6 +47,7 @@
     "userLoadError": "Error loading user names: {{error}}",
     "userParseError": "Error parsing users file: {{error}}",
     "startingApp": "Starting Valheim Notify",
+    "startingAppTest": "Starting Valheim Notify in TEST MODE",
     "logFileError": "Error: log file {{filename}} not found!",
     "tailError": "Tail error: {{data}}",
     "tailClosed": "Tail process exited with code {{code}}",
@@ -55,7 +57,19 @@
     "userWriteError": "Error writing username: {{error}}",
     "disconnectEventStarted": "Disconnection event started",
     "disconnectEventEnded": "Disconnection event ended",
+    "startingAppTest": "Starting Valheim Notify in TEST MODE",
     "nameFound": "Found name: {{name}}",
-    "nameNotFound": "Could not find a name for Steam ID: {{steamId}}"
+    "nameNotFound": "Could not find a name for Steam ID: {{steamId}}",
+    "networkTroubleDetected": "Network trouble detected for {{userName}} ({{charName}}, Steam ID: {{steamId}})",
+    "networkTroubleDetectedUnknown": "Network trouble detected for unknown player (Connection ID: {{connectionId}})",
+    "networkTroubleResolved": "Network trouble resolved for {{userName}} ({{charName}}, Steam ID: {{steamId}})",
+    "networkTroubleResolvedUnknown": "Network trouble resolved for unknown player (Connection ID: {{connectionId}})"
+  },
+  "help": {
+    "title": "🧪 Valheim Notify - Test Mode Help",
+    "usage": "Usage:\n  node vh-notify.js [options]",
+    "options": "Options:\n  --test, -t      Enable test mode (process entire log file)\n  --verbose, -v   Show messages in real-time during processing\n  --save, -s      Save all messages to timestamped files\n  --help, -h      Show this help message",
+    "examples": "Examples:\n  node vh-notify.js --test                    # Basic test mode\n  node vh-notify.js -t -v                     # Test with verbose output\n  node vh-notify.js --test --save             # Test and save to files\n  node vh-notify.js -t -v -s                  # All options combined",
+    "info": "In test mode:\n- No actual Telegram messages are sent\n- Entire log file is processed sequentially\n- Statistics and message summary are shown\n- Progress updates every 100 processed lines"
   }
 } 

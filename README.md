@@ -47,6 +47,58 @@ and then add a line (replace with actual location of the script and node)
 @reboot /home/vhserver/node /home/vhserver/vh-notify-ts/vh-notify.js &
 ```
 
+### Test Mode
+
+The application includes a test mode that allows you to process existing log files without sending actual Telegram messages. This is useful for:
+- Testing your configuration
+- Reviewing what events would be detected in your logs
+- Debugging without spamming your Telegram chat
+
+To run in test mode:
+```bash
+# Basic test mode - shows summary at the end
+node vh-notify.js --test
+
+# Verbose mode - shows messages in real-time
+node vh-notify.js --test --verbose
+
+# Save output to files
+node vh-notify.js --test --save
+
+# Combined options
+node vh-notify.js --test --verbose --save
+
+# Short versions
+node vh-notify.js -t -v -s
+```
+
+#### Test Mode Options:
+
+**Basic test mode (`--test` or `-t`)**:
+- No actual Telegram messages are sent
+- Shows summary of all messages at the end
+- Statistics are shown (processed lines, telegram messages, log messages)
+- The entire log file is processed sequentially
+
+**Verbose mode (`--verbose` or `-v`)**:
+- Shows messages in real-time as they are processed
+- Telegram messages prefixed with `📤 [TELEGRAM TEST]:`
+- Log messages prefixed with `💬 [LOG]:`
+
+**Save output (`--save` or `-s`)**:
+- Saves all messages to timestamped files:
+  - `test-telegram-messages-YYYY-MM-DDTHH-MM-SS.txt`
+  - `test-log-messages-YYYY-MM-DDTHH-MM-SS.txt`
+
+You can also enable test mode options in the configuration file:
+```json
+{
+  "testMode": true,
+  "testVerbose": true,
+  "testSaveOutput": true
+}
+```
+
 ### Localization
 
 The application supports multiple languages. By default, Russian (ru) is used.

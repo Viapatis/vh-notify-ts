@@ -11,6 +11,12 @@ export async function send({
     message: string;
     config: Config;
 }): Promise<void> {
+    if (config.testMode) {
+        // In test mode we only log what would be sent to Telegram
+        console.log('📤 [TELEGRAM TEST]:', message);
+        return;
+    }
+
     try {
         const url = `https://api.telegram.org/bot${config.telegramBotToken}/sendMessage`;
         await axios.post(
