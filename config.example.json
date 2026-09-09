@@ -1,12 +1,25 @@
 {
   "language": "ru",
-  "logFile": "/path/to/your/vhserver-console.log",
+  "logFile": "/path/to/vhserver-console.log",
   "users": "./users.json",
   "timeout": 10000,
   "steamURL": "https://steamcommunity.com/profiles/",
-  "telegramBotToken": "YOUR_BOT_TOKEN",
-  "telegramChatID": "YOUR_CHAT_ID",
+  "sinks": [
+    {
+      "type": "telegram",
+      "botToken": "YOUR_BOT_TOKEN",
+      "chatId": "YOUR_CHAT_ID"
+    },
+    {
+      "type": "webhook",
+      "url": "http://127.0.0.1:8099/your/events/endpoint",
+      "headers": {
+        "X-Service-Token": "YOUR_TOKEN"
+      },
+      "batchMs": 2000
+    }
+  ],
   "testMode": false,
   "testVerbose": false,
   "testSaveOutput": false
-} 
+}

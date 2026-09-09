@@ -1,5 +1,6 @@
 import i18next from 'i18next';
 import { EventType, LogEvent } from './types';
+import { GameEventType } from '../sinks';
 
 const VALHEIM_VERSION = /Valheim version:(.+)/;
 const LOAD_WORLD = /Load world: (.+)/;
@@ -15,6 +16,7 @@ function formatRaidMessage(raid: string): string {
 
 export const serverEvents: LogEvent[] = [
     {
+        // No event of its own: the version travels in the ServerStarted payload
         type: EventType.VALHEIM_VERSION,
         pattern: VALHEIM_VERSION,
         handle: async ({ app, match }) => {
@@ -25,12 +27,14 @@ export const serverEvents: LogEvent[] = [
         type: EventType.LOAD_WORLD,
         pattern: LOAD_WORLD,
         handle: async ({ app, match }) => {
-            await app.notify(
-                i18next.t('server.started', {
-                    version: app.context.valheimVersion,
-                    worldName: match[1],
-                })
-            );
+            const version = app.context.valheimVersion;
+            const worldName = match[1];
+            app.publish({
+                type: GameEventType.ServerStarted,
+                world: worldName,
+                payload: { version },
+                message: i18next.t('server.started', { version, worldName }),
+            });
             app.context.resetSession();
         },
     },
@@ -38,7 +42,10 @@ export const serverEvents: LogEvent[] = [
         type: EventType.APPLICATION_QUIT,
         pattern: APPLICATION_QUIT,
         handle: async ({ app }) => {
-            await app.notify(i18next.t('server.crashed'));
+            app.publish({
+                type: GameEventType.ServerStopped,
+                message: i18next.t('server.crashed'),
+            });
             app.context.resetSession();
         },
     },
@@ -47,18 +54,25 @@ export const serverEvents: LogEvent[] = [
         pattern: NEW_DAY,
         handle: async ({ app, match }) => {
             const day = parseInt(match[1], 10) + 1;
-            await app.notify(i18next.t('server.day', { day }));
+            app.publish({
+                type: GameEventType.NewDay,
+                payload: { day },
+                message: i18next.t('server.day', { day }),
+            });
         },
     },
     {
         type: EventType.RANDOM_EVENT,
         pattern: RANDOM_EVENT,
         handle: async ({ app, match }) => {
-            await app.notify(
-                i18next.t('server.raidStarted', {
-                    eventMessage: formatRaidMessage(match[1]),
-                })
-            );
+            const event = match[1];
+            app.publish({
+                type: GameEventType.RandomEvent,
+                payload: { event },
+                message: i18next.t('server.raidStarted', {
+                    eventMessage: formatRaidMessage(event),
+                }),
+            });
         },
     },
 ];

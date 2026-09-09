@@ -1,5 +1,6 @@
 import i18next from 'i18next';
 import { App } from '../app';
+import { GameEventType } from '../sinks';
 import { CharacterState, Player, PlayerState } from './context';
 import { displayName, fetchUserName } from '../users';
 
@@ -29,9 +30,13 @@ export async function startConnection(
         await fetchUserName(app, player);
     }
 
-    await app.notify(
-        i18next.t('player.connecting', { userName: displayName(player) })
-    );
+    const playerName = displayName(player);
+    app.publish({
+        type: GameEventType.PlayerConnecting,
+        steamId,
+        playerName,
+        message: i18next.t('player.connecting', { userName: playerName }),
+    });
     context.setPlayerState(player, PlayerState.Connecting);
 }
 
@@ -48,12 +53,14 @@ export async function completeConnection(
     character.state = CharacterState.Alive;
     player.character = character;
 
-    await app.notify(
-        i18next.t('player.connected', {
-            userName: displayName(player),
-            charName,
-        })
-    );
+    const playerName = displayName(player);
+    app.publish({
+        type: GameEventType.PlayerJoined,
+        steamId: player.steamId,
+        playerName,
+        characterName: charName,
+        message: i18next.t('player.connected', { userName: playerName, charName }),
+    });
     context.setPlayerState(player, PlayerState.Connected);
 }
 
@@ -67,16 +74,23 @@ export async function finishDisconnect(
 ): Promise<void> {
     const { context } = app;
     if (player?.character) {
-        await app.notify(
-            i18next.t('player.disconnected', {
-                charName: player.character.name,
-                userName: displayName(player),
-            })
-        );
-        context.characters.delete(player.character.name);
+        const playerName = displayName(player);
+        const charName = player.character.name;
+        app.publish({
+            type: GameEventType.PlayerLeft,
+            steamId: player.steamId,
+            playerName,
+            characterName: charName,
+            message: i18next.t('player.disconnected', { charName, userName: playerName }),
+        });
+        context.characters.delete(charName);
         player.character = null;
     } else {
-        await app.notify(i18next.t('player.disconnectedUnknown'));
+        app.publish({
+            type: GameEventType.PlayerLeft,
+            ...(player ? { steamId: player.steamId, playerName: displayName(player) } : {}),
+            message: i18next.t('player.disconnectedUnknown'),
+        });
     }
     if (player) {
         context.setPlayerState(player, PlayerState.Disconnected);

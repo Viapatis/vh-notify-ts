@@ -1,4 +1,9 @@
 node_modules
 dist
-test-telegram-messages-*.txt
+test-events-*.json
 test-log-messages-*.txt
+
+# Local deployment artifacts: unit files, host paths and tokens are specific to
+# one install and have no business in a public repository.
+deploy/
+config.local.json

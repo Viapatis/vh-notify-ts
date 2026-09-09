@@ -50,6 +50,7 @@ async function build() {
       external: [
         // Node built-ins that shouldn't be bundled
         'child_process',
+        'crypto',
         'fs',
         'path',
         'readline'

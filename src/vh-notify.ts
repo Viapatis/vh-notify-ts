@@ -5,21 +5,27 @@ import * as readline from 'readline';
 import * as child_process from 'child_process';
 import i18next from 'i18next';
 import { App } from './app';
+import { createPublisher, createSinks } from './sinks';
 import { applyCliFlags, isHelpRequested, loadConfig } from './cli';
 import { Context } from './domain/context';
 import { processLine } from './events';
 import { setLanguage } from './i18n/i18n';
-import { createTelegramNotifier } from './notify/telegram';
 import { runTestMode, showTestModeHelp } from './test-mode';
 import { loadUserNames } from './users';
 import { Config } from './types/types';
 
+/** How long a shutdown waits for the queued events to reach their sinks */
+const SHUTDOWN_FLUSH_MS = 5000;
+
 /** Follow the server log with `tail -F` and feed every new line to the event handlers. */
 function watchLog(config: Config): void {
+    const sinks = createSinks(config);
+    console.log(i18next.t('log.sinksReady', { sinks: sinks.map((s) => s.name).join(', ') }));
+    const publisher = createPublisher(sinks);
     const app: App = {
         config,
         context: new Context(),
-        notify: createTelegramNotifier(config),
+        publish: publisher.publish,
         log: (message) => console.log(message),
     };
     loadUserNames(app);
@@ -43,9 +49,20 @@ function watchLog(config: Config): void {
         console.log(i18next.t('log.tailClosed', { code }));
     });
 
-    const shutdown = () => {
+    let shuttingDown = false;
+    const shutdown = async () => {
+        if (shuttingDown) {
+            return;
+        }
+        shuttingDown = true;
         console.log(i18next.t('log.shuttingDown'));
         tail.kill();
+        publisher.stop();
+        // Give the queued events one last chance, but never hang the exit
+        await Promise.race([
+            publisher.flush(),
+            new Promise<void>((resolve) => setTimeout(resolve, SHUTDOWN_FLUSH_MS)),
+        ]);
         process.exit(0);
     };
     process.on('SIGINT', shutdown);

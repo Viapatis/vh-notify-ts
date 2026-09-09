@@ -1,7 +1,7 @@
 {
   "name": "vh-notify-ts",
-  "version": "1.1.0",
-  "description": "Notification system for Valheim server",
+  "version": "2.0.0",
+  "description": "Valheim server log parser → NAS panel events",
   "main": "src/vh-notify.ts",
   "engines": {
     "node": ">=20.0.0"

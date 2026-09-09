@@ -1,12 +1,11 @@
 {
-  "logFile": "/home/vhserver/log/console/vhserver-console.log",
   "language": "ru",
-  "telegramBotToken": "",
-  "telegramChatID": "",
-  "users": "/home/vhserver/vh-notify-ts/users.json",
+  "logFile": "",
+  "users": "./users.json",
   "timeout": 10000,
-  "steamURL": "",
+  "steamURL": "https://steamcommunity.com/profiles/",
+  "sinks": [],
   "testMode": false,
   "testVerbose": false,
   "testSaveOutput": false
-} 
+}
