@@ -13,6 +13,11 @@ The application monitors the Valheim server log file and sends notifications for
 7. Server startup and world loading
 8. Server shutdown
 
+Both server networking modes are supported and auto-detected from the log lines:
+
+- **Native Steam** (server started *without* `-crossplay`): join is detected by `Got connection SteamID <id>`, leave by `Closing socket <id>`
+- **Crossplay / PlayFab** (`-crossplay`): join by `PlayFab socket with remote ID playfab/... received local Platform ID Steam_<id>`, leave by `Player connection lost server`
+
 ## Setup and Configuration
 
 ### Basic Setup

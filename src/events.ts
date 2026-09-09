@@ -18,6 +18,96 @@ const USER_CONNECTION_ID =
 const USER_NETWORK_TROUBLE_DETECTED = /Resume TX on playfab\/([0-9a-zA-Z_]+)/;
 const UPDATE_PLAYFAB_TOKEN_REGEX = /Update PlayFab entity token/;
 const PLAYER_CONNECTION_LOST_SERVER_REGEX = /Player connection lost server|Update PlayFab entity token/;
+// Native Steam networking (server started without -crossplay): no PlayFab socket lines at all
+const STEAM_CONNECTION_REGEX = /Got connection SteamID ([0-9]+)/;
+const STEAM_SOCKET_CLOSED_REGEX = /Closing socket ([0-9]+)/;
+
+/**
+ * Player connection started: resolve the user name, announce it and arm the
+ * "first ZDOID belongs to this Steam ID" flag. Shared by the PlayFab
+ * (crossplay) and native Steam log formats.
+ */
+async function startConnection({
+    context,
+    config,
+    steamId,
+}: {
+    context: Context;
+    config: Config;
+    steamId: string;
+}): Promise<void> {
+    // Both formats may appear for the same connection — announce once
+    if (context.connectFlag && context.currentSteamId === steamId) {
+        return;
+    }
+
+    console.log(i18next.t('log.steamIdDetected', { steamId }));
+
+    // If this is a new player, get their name
+    if (!context.userNamesBySteamID[steamId]) {
+        await addUserName({ context, config, steamId });
+    }
+
+    const userName = getUserName({ context, steamId });
+
+    await send({
+        message: i18next.t('player.connecting', { userName }),
+        config,
+    });
+
+    // Set flag that we're now expecting the first ZDOID for this Steam ID
+    context.connectFlag = true;
+    context.currentSteamId = steamId;
+}
+
+/**
+ * Announce a disconnect and reset the disconnect tracking state.
+ * charName === null means we never learned who it was.
+ */
+async function finishDisconnect({
+    context,
+    config,
+    charName,
+    steamId,
+}: {
+    context: Context;
+    config: Config;
+    charName: string | null;
+    steamId: string | null;
+}): Promise<void> {
+    if (charName) {
+        const userName = steamId
+            ? getUserName({ context, steamId })
+            : i18next.t('player.unknownSteamId');
+        await send({
+            message: i18next.t('player.disconnected', { charName, userName }),
+            config,
+        });
+        // Update character state (not on server)
+        context.playerStates[charName] = PlayerState.Disconnected;
+    } else {
+        await send({
+            message: i18next.t('player.disconnectedUnknown'),
+            config,
+        });
+    }
+    console.log(i18next.t('log.disconnectEventEnded'));
+    context.disconnectEvent = false;
+    context.disconnectingChar = null;
+    context.disconnectingZdoId = null;
+}
+
+function findSteamIdByZdoid(context: Context, zdoid: string | null): string | null {
+    if (!zdoid) {
+        return null;
+    }
+    for (const steamId in context.ZDOIDBySteamID) {
+        if (context.ZDOIDBySteamID[steamId] === zdoid) {
+            return steamId;
+        }
+    }
+    return null;
+}
 
 export const events: Event[] = [
     {
@@ -210,56 +300,15 @@ export const events: Event[] = [
         }) => {
             // Only process if we have an active disconnect event
             if (context.disconnectEvent) {
-                if (context.disconnectingChar) {
-                    let disconnectingSteamId: string | null = null;
-                    for (const steamId in context.ZDOIDBySteamID) {
-                        if (
-                            context.ZDOIDBySteamID[steamId] ===
-                            context.disconnectingZdoId
-                        ) {
-                            disconnectingSteamId = steamId;
-                            break;
-                        }
-                    }
-
-                    // If we found Steam ID, get the username
-                    if (disconnectingSteamId) {
-                        const disconnectingUser = getUserName({
-                            context,
-                            steamId: disconnectingSteamId,
-                        });
-                        // Send disconnection message with character name and username
-                        await send({
-                            message: i18next.t('player.disconnected', {
-                                charName: context.disconnectingChar,
-                                userName: disconnectingUser,
-                            }),
-                            config,
-                        });
-                    } else {
-                        // If we didn't find Steam ID, send message with character name only
-                        await send({
-                            message: i18next.t('player.disconnected', {
-                                charName: context.disconnectingChar,
-                                userName: i18next.t('player.unknownSteamId'),
-                            }),
-                            config,
-                        });
-                    }
-
-                    // Update character state (not on server)
-                    context.playerStates[context.disconnectingChar] =
-                        PlayerState.Disconnected;
-                } else {
-                    await send({
-                        message: i18next.t('player.disconnectedUnknown'),
-                        config,
-                    });
-                }
-                console.log(i18next.t('log.disconnectEventEnded'));
-                context.disconnectEvent = false;
-                context.disconnectingChar = null;
-                context.disconnectingZdoId = null;
+                await finishDisconnect({
+                    context,
+                    config,
+                    charName: context.disconnectingChar,
+                    steamId: findSteamIdByZdoid(
+                        context,
+                        context.disconnectingZdoId
+                    ),
+                });
             }
             // If no active disconnect event, ignore this "Player connection lost"
         },
@@ -451,35 +500,66 @@ export const events: Event[] = [
                 const connectionId = connectionIDMatch[1];
                 const steamId = connectionIDMatch[2];
                 context.playerConnectionIDBySteamID[steamId] = connectionId;
-                console.log(
-                    i18next.t('log.steamIdDetected', {
-                        steamId: steamId,
-                    })
-                );
-
-                // If this is a new player, get their name
-                if (!context.userNamesBySteamID[steamId]) {
-                    await addUserName({
-                        context,
-                        config,
-                        steamId,
-                    });
-                }
-
-                const userName = getUserName({
-                    context,
-                    steamId: steamId,
-                });
-
-                await send({
-                    message: i18next.t('player.connecting', { userName }),
-                    config,
-                });
-
-                // Set flag that we're now expecting the first ZDOID for this Steam ID
-                context.connectFlag = true;
-                context.currentSteamId = steamId;
+                await startConnection({ context, config, steamId });
             }
+        },
+    },
+    {
+        pattern: STEAM_CONNECTION_REGEX,
+        type: EventType.STEAM_CONNECTION,
+        process: async ({
+            context,
+            line,
+            config,
+        }: {
+            context: Context;
+            line: string;
+            config: Config;
+        }) => {
+            // Native Steam connection (no -crossplay): "Got connection SteamID <id>"
+            const steamMatch = line.match(STEAM_CONNECTION_REGEX);
+            if (steamMatch) {
+                await startConnection({ context, config, steamId: steamMatch[1] });
+            }
+        },
+    },
+    {
+        pattern: STEAM_SOCKET_CLOSED_REGEX,
+        type: EventType.STEAM_SOCKET_CLOSED,
+        process: async ({
+            context,
+            line,
+            config,
+        }: {
+            context: Context;
+            line: string;
+            config: Config;
+        }) => {
+            // Native Steam disconnect (no -crossplay): "Closing socket <steamId>".
+            // There is no "Player connection lost server" line in this mode,
+            // but the Steam ID is right in the line, so we don't depend on
+            // the RPC_Disconnect / Destroying abandoned zdo bookkeeping.
+            const closedMatch = line.match(STEAM_SOCKET_CLOSED_REGEX);
+            if (!closedMatch) {
+                return;
+            }
+            const steamId = closedMatch[1];
+
+            // Connection dropped before the character spawned — just disarm
+            if (context.connectFlag && context.currentSteamId === steamId) {
+                context.connectFlag = false;
+                context.currentSteamId = null;
+            }
+
+            const zdoid = context.ZDOIDBySteamID[steamId];
+            const charName =
+                (zdoid && context.charNamesByZDOID[zdoid]) ||
+                context.disconnectingChar;
+
+            if (charName || context.disconnectEvent) {
+                await finishDisconnect({ context, config, charName, steamId });
+            }
+            // Unknown socket without a pending disconnect (e.g. failed handshake) — ignore
         },
     },
 ];
