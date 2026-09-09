@@ -1,2 +1,4 @@
 node_modules
 dist
+test-telegram-messages-*.txt
+test-log-messages-*.txt

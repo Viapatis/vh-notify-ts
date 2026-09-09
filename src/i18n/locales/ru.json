@@ -1,5 +1,5 @@
 {
-  "events": {
+  "raidEvents": {
     "army_eikthyr": "Эйктюр объединяет существ леса.",
     "army_theelder": "Лес движется...",
     "army_bonemass": "Вонь с болот",
@@ -70,5 +70,20 @@
     "options": "Опции:\n  --test, -t      Включить тестовый режим (обработать весь лог файл)\n  --verbose, -v   Показывать сообщения в реальном времени во время обработки\n  --save, -s      Сохранить все сообщения в файлы с временными метками\n  --help, -h      Показать эту справку",
     "examples": "Примеры:\n  node vh-notify.js --test                    # Базовый тестовый режим\n  node vh-notify.js -t -v                     # Тест с подробным выводом\n  node vh-notify.js --test --save             # Тест и сохранение в файлы\n  node vh-notify.js -t -v -s                  # Все опции вместе",
     "info": "В тестовом режиме:\n- Реальные сообщения в Telegram не отправляются\n- Весь лог файл обрабатывается последовательно\n- Показывается статистика и сводка сообщений\n- Обновления прогресса каждые 100 обработанных строк"
+  },
+  "test": {
+    "starting": "🧪 [TEST MODE] Запуск тестового режима...",
+    "readingFile": "📁 [TEST MODE] Читаем файл: {{filename}}",
+    "progress": "🔄 [TEST MODE] Обработано строк: {{count}}",
+    "savedTelegram": "💾 [TEST MODE] Telegram сообщения сохранены в: {{filename}}",
+    "savedLog": "💾 [TEST MODE] Лог сообщения сохранены в: {{filename}}",
+    "stats": "📊 [TEST MODE] Статистика:",
+    "statsLines": "   📋 Обработано строк: {{count}}",
+    "statsTelegram": "   📤 Telegram сообщений: {{count}}",
+    "statsLog": "   💬 Лог сообщений: {{count}}",
+    "summary": "\n📋 [TEST MODE] Сводка сообщений:",
+    "telegramHeader": "\n📤 [TELEGRAM MESSAGES]:",
+    "logHeader": "\n💬 [LOG MESSAGES]:",
+    "done": "\n✅ [TEST MODE] Тестирование завершено"
   }
-} 
+}

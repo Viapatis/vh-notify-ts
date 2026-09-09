@@ -116,17 +116,47 @@ To add or modify localizations:
 Example of a localization file:
 ```json
 {
+  "raidEvents": {
+    "army_eikthyr": "Eikthyr rallies the creatures of the forest.",
+    "unknown": "Oops, unknown event!"
+  },
   "player": {
-    "joined": "{name} joined the server",
-    "disconnected": "{name} disconnected",
-    "unknownUser": "Unknown player ({steamId})"
+    "connecting": "{{userName}} is connecting",
+    "connected": "{{userName}} connected as {{charName}}",
+    "unknownUser": "Unknown player ({{steamId}})"
   }
 }
 ```
 
+`raidEvents` maps the name from the `Random event set:<name>` log line to the message shown in the chat; unknown names fall back to `raidEvents.unknown`.
+
 ### User Management
 
 The application automatically resolves Steam IDs to usernames and stores them in the `users.json` file. You can manually edit this file to customize player names, restart required for update.
+
+## Project Layout
+
+```
+src/
+  vh-notify.ts     entry point: config, log tailing, signals
+  cli.ts           config.json loading and command line flags
+  app.ts           App = config + session context + notify/log channels
+  domain/
+    context.ts     Player (Steam account, connect/disconnect state) and Character (ZDOID, alive/dead)
+    session.ts     connect / disconnect flow shared by both networking modes
+  events/          one file per topic; each event = regex + handler
+    connection.ts  PlayFab (crossplay) and native Steam joins
+    player.ts      character spawn, death, respawn
+    disconnect.ts  RPC_Disconnect, abandoned ZDOs, connection lost, socket closed
+    server.ts      version, world load, shutdown, new day, raids
+    network.ts     network trouble heuristics (unstable, log only)
+  notify/          Telegram transport
+  test-mode.ts     replays a log file with collected output instead of Telegram
+  users.ts         Steam ID -> nickname resolution and users.json
+  i18n/            i18next setup and locale files
+```
+
+To support a new log line, add an entry to the matching file in `src/events/` (or a new file registered in `src/events/index.ts`). The regex is the full pattern; its capture groups arrive in the handler as `match`. Handlers talk to the outside world only through `app.notify` and `app.log`, which is what makes test mode possible.
 
 ## Acknowledgements
 

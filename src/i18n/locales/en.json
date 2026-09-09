@@ -1,5 +1,5 @@
 {
-  "events": {
+  "raidEvents": {
     "army_eikthyr": "Eikthyr rallies the creatures of the forest.",
     "army_theelder": "The forest is moving...",
     "army_bonemass": "A foul smell from the swamp...",
@@ -57,7 +57,6 @@
     "userWriteError": "Error writing username: {{error}}",
     "disconnectEventStarted": "Disconnection event started",
     "disconnectEventEnded": "Disconnection event ended",
-    "startingAppTest": "Starting Valheim Notify in TEST MODE",
     "nameFound": "Found name: {{name}}",
     "nameNotFound": "Could not find a name for Steam ID: {{steamId}}",
     "networkTroubleDetected": "Network trouble detected for {{userName}} ({{charName}}, Steam ID: {{steamId}})",
@@ -71,5 +70,20 @@
     "options": "Options:\n  --test, -t      Enable test mode (process entire log file)\n  --verbose, -v   Show messages in real-time during processing\n  --save, -s      Save all messages to timestamped files\n  --help, -h      Show this help message",
     "examples": "Examples:\n  node vh-notify.js --test                    # Basic test mode\n  node vh-notify.js -t -v                     # Test with verbose output\n  node vh-notify.js --test --save             # Test and save to files\n  node vh-notify.js -t -v -s                  # All options combined",
     "info": "In test mode:\n- No actual Telegram messages are sent\n- Entire log file is processed sequentially\n- Statistics and message summary are shown\n- Progress updates every 100 processed lines"
+  },
+  "test": {
+    "starting": "🧪 [TEST MODE] Starting test mode...",
+    "readingFile": "📁 [TEST MODE] Reading file: {{filename}}",
+    "progress": "🔄 [TEST MODE] Lines processed: {{count}}",
+    "savedTelegram": "💾 [TEST MODE] Telegram messages saved to: {{filename}}",
+    "savedLog": "💾 [TEST MODE] Log messages saved to: {{filename}}",
+    "stats": "📊 [TEST MODE] Statistics:",
+    "statsLines": "   📋 Lines processed: {{count}}",
+    "statsTelegram": "   📤 Telegram messages: {{count}}",
+    "statsLog": "   💬 Log messages: {{count}}",
+    "summary": "\n📋 [TEST MODE] Message summary:",
+    "telegramHeader": "\n📤 [TELEGRAM MESSAGES]:",
+    "logHeader": "\n💬 [LOG MESSAGES]:",
+    "done": "\n✅ [TEST MODE] Testing finished"
   }
-} 
+}
