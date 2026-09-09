@@ -4,9 +4,9 @@ export enum EventType {
     PLAYFAB_CONNECTION = 'PLAYFAB_CONNECTION', // crossplay (PlayFab) mode
     STEAM_CONNECTION = 'STEAM_CONNECTION', // native Steam mode (no -crossplay)
     CHARACTER_ZDOID = 'CHARACTER_ZDOID',
-    DISCONNECT_START = 'DISCONNECT_START',
-    DISCONNECT_INFO = 'DISCONNECT_INFO',
-    DISCONNECT_END = 'DISCONNECT_END',
+    DISCONNECT_START = 'DISCONNECT_START', // both modes
+    DISCONNECT_INFO = 'DISCONNECT_INFO', // both modes
+    DISCONNECT_END = 'DISCONNECT_END', // crossplay (PlayFab) mode
     STEAM_SOCKET_CLOSED = 'STEAM_SOCKET_CLOSED', // native Steam mode (no -crossplay)
     VALHEIM_VERSION = 'VALHEIM_VERSION',
     LOAD_WORLD = 'LOAD_WORLD',

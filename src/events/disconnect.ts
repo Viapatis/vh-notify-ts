@@ -3,12 +3,18 @@ import { EventType, LogEvent } from './types';
 import { PlayerState } from '../domain/context';
 import { finishDisconnect } from '../domain/session';
 
+// Both modes: a disconnect starts with one of these lines and the abandoned
+// ZDOs of the leaving character follow. Neither line names the player, so the
+// character is resolved through the ZDO owner id.
 const DISCONNECT_START = /ZRpc timeout detected|RPC_Disconnect/;
 const ABANDONED_ZDO = /Destroying abandoned non persistent zdo ([0-9]+):/;
-// Crossplay: "Update PlayFab entity token" is the only line that follows a
-// disconnect when a single player was on the server
+// Crossplay only: "Player connection lost server" ends the disconnect;
+// "Update PlayFab entity token" is the only line that follows when a single
+// player was on the server. Native Steam never logs either.
 const DISCONNECT_END = /Player connection lost server|Update PlayFab entity token/;
-// Native Steam: the Steam ID is right in the line, no bookkeeping needed
+// Native Steam only: the Steam ID is right in the line. The start/info
+// bookkeeping above is still used as a fallback for sockets without a
+// known character.
 const STEAM_SOCKET_CLOSED = /Closing socket ([0-9]+)/;
 
 export const disconnectEvents: LogEvent[] = [
