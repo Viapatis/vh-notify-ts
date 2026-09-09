@@ -1,6 +1,6 @@
 {
   "name": "vh-notify-ts",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Notification system for Valheim server",
   "main": "src/vh-notify.ts",
   "engines": {
