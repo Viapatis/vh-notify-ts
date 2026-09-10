@@ -3,7 +3,11 @@ import { EventType, LogEvent } from './types';
 import { GameEventType } from '../sinks';
 
 const VALHEIM_VERSION = /Valheim version:(.+)/;
-const LOAD_WORLD = /Load world: (.+)/;
+// Two shapes, the server picks one by version:
+//   up to 1.0.6  "Load world: evpatijworld (evpatijworld)"
+//   since 1.0.7  "ZNet.LoadWorld: evpatijworld (evpatijworld), save number 19"
+// The name is taken up to the first space or bracket, so the trailing details do not leak into it.
+const LOAD_WORLD = /(?:Load world|ZNet\.LoadWorld): ([^\s(]+)/;
 const APPLICATION_QUIT = /OnApplicationQuit/;
 const NEW_DAY = /day:([0-9]+)/;
 const RANDOM_EVENT = /Random event set:([0-9a-zA-Z_]+)/;
